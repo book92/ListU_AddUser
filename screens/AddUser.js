@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import QRCode from 'react-native-qrcode-svg';
 
 const AddUser = ({ route, navigation }) => {
   const { setUsers } = route.params;
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [qrData, setQRData] = useState(null);
 
   const handleAddUser = () => {
     if (name && email && password) {
@@ -14,7 +16,16 @@ const AddUser = ({ route, navigation }) => {
       Alert.alert('User Added', `Name: ${name}, Email: ${email}`);
       navigation.goBack();
     } else {
-      Alert.alert('Error');
+      Alert.alert('Error', 'All fields are required');
+    }
+  };
+
+  const handleGenerateQR = () => {
+    if (name && email && password) {
+      const userInfoURL = `https://example.com/userinfo?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`;
+      setQRData(userInfoURL);
+    } else {
+      Alert.alert('Error', 'All fields are required to generate QR code');
     }
   };
 
@@ -40,6 +51,13 @@ const AddUser = ({ route, navigation }) => {
         secureTextEntry
       />
       <Button title="Add User" onPress={handleAddUser} />
+      <Button title="Generate QR Code" onPress={handleGenerateQR} />
+      {qrData && (
+        <View style={styles.qrContainer}>
+          <Text>Scan this QR code:</Text>
+          <QRCode value={qrData} size={200} />
+        </View>
+      )}
     </View>
   );
 };
@@ -59,6 +77,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 20,
     padding: 10,
+  },
+  qrContainer: {
+    marginTop: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

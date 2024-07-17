@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Info</title>
+</head>
+<body>
+  <h1>User Info</h1>
+  <p id="name"></p>
+  <p id="email"></p>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get('name');
+    const email = urlParams.get('email');
+
+    document.getElementById('name').textContent = Name: ${name};
+    document.getElementById('email').textContent = Email: ${email};
+  </script>
+</body>
+</html>
